@@ -17,13 +17,23 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
     return Scaffold(
-      appBar: AppBar(title: Text('Login')),
+      backgroundColor: Colors.black,
+      appBar: AppBar(),
       body: Padding(
         padding: EdgeInsets.all(16),
-        child: Column(children: [
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+          Image.asset(
+            'assets/Logo.png',
+            width: 160,
+            fit: BoxFit.contain,
+          ),
+          Text('Login'),
           Form(
             key: _formKey,
-            child: Column(children: [
+            child: Column(
+             children: [
               TextFormField(
                 controller: _email,
                 decoration: InputDecoration(labelText: 'E-mail'),
@@ -38,6 +48,9 @@ class _LoginScreenState extends State<LoginScreen> {
               SizedBox(height: 20),
               auth.state == AuthState.loading ? CircularProgressIndicator() :
               ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: WidgetStateProperty.all(Colors.blueAccent),
+                ),
                 onPressed: () async {
                   if (_formKey.currentState?.validate() ?? false) {
                     await auth.login(_email.text.trim(), _pass.text.trim());
@@ -48,7 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     }
                   }
                 },
-                child: Text('Entrar'),
+                child: Text('Entrar', style: TextStyle(color: Colors.white),),
               )
             ]),
           )
