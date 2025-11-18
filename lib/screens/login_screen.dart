@@ -29,41 +29,49 @@ class _LoginScreenState extends State<LoginScreen> {
             width: 160,
             fit: BoxFit.contain,
           ),
-          Text('Login'),
           Form(
             key: _formKey,
-            child: Column(
-             children: [
-              TextFormField(
-                controller: _email,
-                decoration: InputDecoration(labelText: 'E-mail'),
-                validator: (v) => v != null && v.contains('@') ? null : 'E-mail inválido',
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 60, vertical: 0),
+              padding: 
+                  EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
               ),
-              TextFormField(
-                controller: _pass,
-                decoration: InputDecoration(labelText: 'Senha'),
-                obscureText: true,
-                validator: (v) => v != null && v.length >= 4 ? null : 'Senha muito curta',
-              ),
-              SizedBox(height: 20),
-              auth.state == AuthState.loading ? CircularProgressIndicator() :
-              ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: WidgetStateProperty.all(Colors.blueAccent),
+              child: Column(
+                children: [
+                  TextFormField(
+                  controller: _email,
+                  decoration: InputDecoration(labelText: 'E-mail'),
+                  validator: (v) => v != null && v.contains('@') ? null : 'E-mail inválido',
                 ),
-                onPressed: () async {
-                  if (_formKey.currentState?.validate() ?? false) {
-                    await auth.login(_email.text.trim(), _pass.text.trim());
-                    if (auth.state == AuthState.authenticated) {
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HomeScreen()));
-                    } else if (auth.state == AuthState.error) {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(auth.error ?? 'Erro')));
+                TextFormField(
+                  controller: _pass,
+                  decoration: InputDecoration(labelText: 'Senha'),
+                  obscureText: true,
+                  validator: (v) => v != null && v.length >= 4 ? null : 'Senha muito curta',
+                ),
+                SizedBox(height: 20),
+                auth.state == AuthState.loading ? CircularProgressIndicator() :
+                ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: WidgetStateProperty.all(Colors.lightGreen),
+                  ),
+                  onPressed: () async {
+                    if (_formKey.currentState?.validate() ?? false) {
+                      await auth.login(_email.text.trim(), _pass.text.trim());
+                      if (auth.state == AuthState.authenticated) {
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HomeScreen()));
+                      } else if (auth.state == AuthState.error) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(auth.error ?? 'Erro')));
+                      }
                     }
-                  }
-                },
-                child: Text('Entrar', style: TextStyle(color: Colors.white),),
-              )
-            ]),
+                  },
+                  child: Text('Login', style: TextStyle(color: Colors.black),),
+                )
+              ]),
+            ),
           )
         ]),
       ),
