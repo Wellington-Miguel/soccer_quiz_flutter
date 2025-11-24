@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:soccer_quiz_flutter/screens/home_screen.dart';
+import 'package:soccer_quiz_flutter/screens/match_quiz_screen.dart';
+import 'package:soccer_quiz_flutter/screens/ranking_screen.dart';
 import 'providers/coin_provider.dart'; 
 import 'screens/quiz_screen.dart';
 import 'services/di.dart';
@@ -33,7 +36,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           scaffoldBackgroundColor: Colors.black, 
         ),
-        home: QuizScreen(),
+        home: RankingListScreen(),
       ),
     );
   }
