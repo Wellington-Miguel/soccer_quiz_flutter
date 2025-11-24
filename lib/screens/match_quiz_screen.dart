@@ -253,7 +253,7 @@ class _MatchQuizScreenState extends State<MatchQuizScreen> {
     required String text, 
     required Color color, 
     required VoidCallback onTap,
-    Color textColor = Colors.white, // Padrão branco, mas mutável para preto
+    Color textColor = Colors.white, 
   }) {
     return Expanded(
       child: Container(
@@ -262,7 +262,7 @@ class _MatchQuizScreenState extends State<MatchQuizScreen> {
           style: ElevatedButton.styleFrom(
             backgroundColor: color,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5), // Bordas levemente arredondadas
+              borderRadius: BorderRadius.circular(5), 
             ),
           ),
           onPressed: onTap,
