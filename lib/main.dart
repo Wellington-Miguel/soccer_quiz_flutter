@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:soccer_quiz_flutter/screens/home_screen.dart';
-import 'package:soccer_quiz_flutter/screens/match_quiz_screen.dart';
 import 'package:soccer_quiz_flutter/screens/ranking_screen.dart';
 import 'providers/coin_provider.dart'; 
-import 'screens/quiz_screen.dart';
 import 'services/di.dart';
 
 Future<void> main() async {

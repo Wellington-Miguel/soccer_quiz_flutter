@@ -4,7 +4,12 @@ import 'package:soccer_quiz_flutter/screens/termos_screen.dart';
 import '../providers/coin_provider.dart';
 import 'ranking_detail_screen.dart';
 
-class RankingListScreen extends StatelessWidget {
+class RankingListScreen extends StatefulWidget {
+  @override
+  State<RankingListScreen> createState() => _RankingListScreenState();
+}
+
+class _RankingListScreenState extends State<RankingListScreen> {
   // Dados fictícios (Mock)
   final List<Map<String, String>> historyQuizzes = [
     {"name": "Quiz de Tiago", "date": "26/10/2025"},
@@ -12,6 +17,16 @@ class RankingListScreen extends StatelessWidget {
     {"name": "Quiz de Marcos", "date": "05/06/2025"},
     {"name": "Quiz de Ana", "date": "01/06/2025"},
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    // CORREÇÃO: Atualiza as moedas ao entrar na tela
+    // O addPostFrameCallback garante que a construção da UI terminou antes de chamar o Provider
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<UserProvider>(context, listen: false).fetchUserCoins();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -137,11 +152,11 @@ class RankingListScreen extends StatelessWidget {
               Consumer<UserProvider>(
                 builder: (context, userProvider, child) {
                   return Text(
-                "Soccer Coins: ${userProvider.coins}",
-                style: TextStyle(color: Colors.white, fontSize: 16),
-              );
-            },
-          ),
+                    "Soccer Coins: ${userProvider.coins}",
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  );
+                },
+              ),
             ],
           ),
         )
