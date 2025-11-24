@@ -23,21 +23,29 @@ class ApiClient {
   Future<http.Response> get(String path) async {
     final token = await _getToken();
     final headers = <String, String>{ 'Content-Type': 'application/json' };
-    if (token != null) headers['Authorization'] = 'Bearer \$token';
-    final uri = Uri.parse('\$baseUrl\$path');
+
+    if (token != null) headers['Authorization'] = 'Bearer $token';
+
+    final uri = Uri.parse('$baseUrl$path');
+    
     final res = await client.get(uri, headers: headers);
     if (res.statusCode >= 200 && res.statusCode < 300) return res;
-    throw ApiException('GET \$path failed with status \${res.statusCode}: \${res.body}');
+
+    throw ApiException('GET $path failed with status ${res.statusCode}: ${res.body}');
   }
 
   Future<http.Response> post(String path, dynamic body) async {
     final token = await _getToken();
     final headers = <String, String>{ 'Content-Type': 'application/json' };
-    if (token != null) headers['Authorization'] = 'Bearer \$token';
-    final uri = Uri.parse('\$baseUrl\$path');
+
+    if (token != null) headers['Authorization'] = 'Bearer $token';
+
+    final uri = Uri.parse('$baseUrl$path');
+    
     final res = await client.post(uri, headers: headers, body: jsonEncode(body));
     if (res.statusCode >= 200 && res.statusCode < 300) return res;
-    throw ApiException('POST \$path failed with status \${res.statusCode}: \${res.body}');
+
+    throw ApiException('POST $path failed with status ${res.statusCode}: ${res.body}');
   }
 
   Future<void> saveToken(String token) async {

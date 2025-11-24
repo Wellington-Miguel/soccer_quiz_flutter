@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'providers/coin_provider.dart'; 
 import 'screens/quiz_screen.dart';
+import 'screens/splash_screen.dart';
 import 'services/di.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Carrega dependências
+
   final container = await buildServiceContainer();
-  // Inicia o App passando o container
+
   runApp(MyApp(container: container));
 }
 
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           scaffoldBackgroundColor: Colors.black, 
         ),
-        home: QuizScreen(),
+        home: SplashScreen(),
       ),
     );
   }
