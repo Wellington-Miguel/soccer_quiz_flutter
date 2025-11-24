@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:soccer_quiz_flutter/screens/create_quiz_screen.dart';
+import 'package:soccer_quiz_flutter/screens/ranking_screen.dart';
 import 'package:soccer_quiz_flutter/screens/termos_screen.dart';
 import '../providers/coin_provider.dart'; // Certifique-se que o nome do arquivo está correto
 import 'quiz_screen.dart';
@@ -10,7 +12,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   @override
   void initState() {
     super.initState();
@@ -28,15 +29,15 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           children: [
             SizedBox(height: 20),
-            
+
             // 1. LOGO GRANDE
             Center(
               child: Image.asset(
                 'assets/Logo.png', // Sua imagem de logo
                 width: 250, // Maior que na tela interna
                 fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) => 
-                  Icon(Icons.sports_soccer, size: 100, color: Colors.blue),
+                errorBuilder: (context, error, stackTrace) =>
+                    Icon(Icons.sports_soccer, size: 100, color: Colors.blue),
               ),
             ),
 
@@ -83,11 +84,21 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 30.0),
                 child: ListView(
                   children: [
-                    _buildMenuItem("Criar Quiz", onTap: () {}),
+                    _buildMenuItem("Criar Quiz", onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CreateQuizScreen()));
+                    }),
                     _buildMenuItem("Novo Time", onTap: () {}),
                     _buildMenuItem("Dashboard Financeiro", onTap: () {}),
                     _buildMenuItem("Dashboard Perguntas", onTap: () {}),
-                    _buildMenuItem("Ranking", onTap: () {}),
+                    _buildMenuItem("Ranking", onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RankingListScreen()));
+                    }),
                     _buildMenuItem("Usuários", onTap: () {}),
                   ],
                 ),
@@ -112,24 +123,23 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             // Ícone da bola
             Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(color: Colors.blue.withOpacity(0.2), blurRadius: 5)
-                ]
-              ),
-              child: Icon(Icons.sports_soccer, color: Colors.blueGrey[200], size: 32),
+              decoration: BoxDecoration(shape: BoxShape.circle, boxShadow: [
+                BoxShadow(color: Colors.blue.withOpacity(0.2), blurRadius: 5)
+              ]),
+              child: Icon(Icons.sports_soccer,
+                  color: Colors.blueGrey[200], size: 32),
             ),
-            
+
             SizedBox(width: 15),
-            
+
             // Caixa de Texto com Borda Neon
             Expanded(
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 12, horizontal: 15),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.cyan, width: 2), // Borda Azul Neon
-                  color: Colors.transparent, 
+                  border: Border.all(
+                      color: Colors.cyan, width: 2), // Borda Azul Neon
+                  color: Colors.transparent,
                 ),
                 child: Text(
                   text,
@@ -158,12 +168,14 @@ class _HomeScreenState extends State<HomeScreen> {
           Row(
             children: [
               GestureDetector(
-                onTap: () {
-                   // Navega para a tela de privacidade que criamos antes
-                   Navigator.push(context, MaterialPageRoute(builder: (context) => TermsScreen()));
-                },
-                child: Text("Privacidade e Termos", style: TextStyle(color: Color(0xFFCCDC39), fontSize: 12))
-              ),             
+                  onTap: () {
+                    // Navega para a tela de privacidade que criamos antes
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => TermsScreen()));
+                  },
+                  child: Text("Privacidade e Termos",
+                      style:
+                          TextStyle(color: Color(0xFFCCDC39), fontSize: 12))),
             ],
           ),
 
