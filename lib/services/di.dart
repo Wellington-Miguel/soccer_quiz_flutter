@@ -18,8 +18,16 @@ class ServiceContainer {
 
 Future<ServiceContainer> buildServiceContainer() async {
   final secureStorage = FlutterSecureStorage();
-  final apiClient = ApiClient(baseUrl: const String.fromEnvironment('BASE_URL', defaultValue: 'https://api.example.com'), secureStorage: secureStorage);
+
+  const baseUrl = 'http://10.0.2.2:3000'; // Pro Docker do Back
+
+  final apiClient = ApiClient(baseUrl: baseUrl, secureStorage: secureStorage);
   final authRepository = AuthRepository(apiClient: apiClient);
   final authProvider = AuthProvider(authRepository: authRepository);
-  return ServiceContainer(authRepository: authRepository, authProvider: authProvider, apiClient: apiClient);
+
+  return ServiceContainer(
+    authRepository: authRepository, 
+    authProvider: authProvider, 
+    apiClient: apiClient
+  );
 }

@@ -6,13 +6,14 @@ import 'package:soccer_quiz_flutter/screens/login_screen.dart';
 import 'package:soccer_quiz_flutter/screens/profile_screen.dart';
 import 'package:soccer_quiz_flutter/screens/ranking_screen.dart';
 import 'providers/coin_provider.dart';
+import 'screens/splash_screen.dart';
 import 'services/di.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Carrega dependências
+
   final container = await buildServiceContainer();
-  // Inicia o App passando o container
+
   runApp(MyApp(container: container));
 }
 
@@ -36,7 +37,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           scaffoldBackgroundColor: Colors.black,
         ),
-        home: LoginScreen(),
+        home: SplashScreen(),
       ),
     );
   }

@@ -3,8 +3,11 @@ import 'package:provider/provider.dart';
 import 'package:soccer_quiz_flutter/screens/create_quiz_screen.dart';
 import 'package:soccer_quiz_flutter/screens/ranking_screen.dart';
 import 'package:soccer_quiz_flutter/screens/termos_screen.dart';
-import '../providers/coin_provider.dart'; // Certifique-se que o nome do arquivo está correto
+import '../providers/coin_provider.dart';
 import 'quiz_screen.dart';
+import '../providers/auth_provider.dart';
+import 'profile_screen.dart';
+import 'login_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -15,7 +18,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // Opcional: Atualizar moedas ao abrir o app
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<UserProvider>(context, listen: false).fetchUserCoins();
     });
@@ -23,6 +25,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // 1. LÓGICA DO BACK-CONNECTED: Pegar os dados do usuário logado
+    final auth = Provider.of<AuthProvider>(context);
+    final name = auth.user != null ? (auth.user!['name'] ?? 'Usuário') : 'Usuário';
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
@@ -30,20 +36,29 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             SizedBox(height: 20),
 
-            // 1. LOGO GRANDE
+            // 2. LOGO
             Center(
               child: Image.asset(
-                'assets/Logo.png', // Sua imagem de logo
-                width: 250, // Maior que na tela interna
+                'assets/Logo.png',
+                width: 200, 
                 fit: BoxFit.contain,
                 errorBuilder: (context, error, stackTrace) =>
                     Icon(Icons.sports_soccer, size: 100, color: Colors.blue),
               ),
             ),
 
-            SizedBox(height: 30),
+            // 3. SAUDAÇÃO (Sua parte integrada na UI nova)
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: Text(
+                'Olá, ' + name, 
+                style: TextStyle(color: Colors.white70, fontSize: 18)
+              ),
+            ),
 
-            // 2. BOTÃO DESTAQUE "JOGAR QUIZ"
+            SizedBox(height: 20),
+
+            // 4. BOTÃO DESTAQUE "JOGAR QUIZ"
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40.0),
               child: SizedBox(
@@ -57,7 +72,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   onPressed: () {
-                    // Navega para a lista de salas
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => QuizScreen()),
@@ -78,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
             SizedBox(height: 30),
 
-            // 3. LISTA DE OPÇÕES (MENU)
+            // 5. LISTA DE OPÇÕES (MENU)
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30.0),
@@ -90,22 +104,37 @@ class _HomeScreenState extends State<HomeScreen> {
                           MaterialPageRoute(
                               builder: (context) => CreateQuizScreen()));
                     }),
-                    _buildMenuItem("Novo Time", onTap: () {}),
-                    _buildMenuItem("Dashboard Financeiro", onTap: () {}),
-                    _buildMenuItem("Dashboard Perguntas", onTap: () {}),
+                    
+                    // Botão Perfil usando a rota correta
+                    _buildMenuItem("Meu Perfil", onTap: () {
+                       Navigator.push(context, MaterialPageRoute(builder: (_) => ProfileScreen()));
+                    }),
+
                     _buildMenuItem("Ranking", onTap: () {
+                      // Confirme se o nome da classe no seu projeto é RankingScreen ou RankingListScreen
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => RankingListScreen()));
+                              builder: (context) => RankingScreen())); 
                     }),
-                    _buildMenuItem("Usuários", onTap: () {}),
+                    
+                    _buildMenuItem("Novo Time", onTap: () {}),
+                    
+                    // 6. BOTÃO SAIR (Sua lógica dentro do design novo)
+                    _buildMenuItem("Sair", onTap: () async {
+                      await auth.logout();
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => LoginScreen()),
+                        (route) => false,
+                      );
+                    }),
                   ],
                 ),
               ),
             ),
 
-            // 4. RODAPÉ (Igual ao das outras telas)
+            // 7. RODAPÉ
             _buildFooter(context),
           ],
         ),
@@ -113,7 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Widget reutilizável para os itens do menu (Bola + Texto com borda)
+  // Widget reutilizável para os itens do menu (Design do colega)
   Widget _buildMenuItem(String text, {required VoidCallback onTap}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 15.0),
@@ -160,16 +189,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildFooter(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-      // color: Colors.black, // Caso precise cobrir conteúdo atrás
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Links de texto
           Row(
             children: [
               GestureDetector(
                   onTap: () {
-                    // Navega para a tela de privacidade que criamos antes
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => TermsScreen()));
                   },
@@ -178,8 +204,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           TextStyle(color: Color(0xFFCCDC39), fontSize: 12))),
             ],
           ),
-
-          // Mostrador de Moedas com Provider
           Consumer<UserProvider>(
             builder: (context, userProvider, child) {
               return Text(

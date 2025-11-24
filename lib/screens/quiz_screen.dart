@@ -11,24 +11,39 @@ class QuizScreen extends StatefulWidget {
 }
 
 class _QuizScreenState extends State<QuizScreen> {
-  bool loading = false;
 
-  // Dados fictícios para imitar a imagem (Nome, Capacidade, Preço)
-  final List<Map<String, dynamic>> availableQuizzes = [
-    {"name": "Quiz de João", "players": "2/10", "price": "2 SC"},
-    {"name": "Quiz de Lucas", "players": "3/5", "price": "1 SC"},
-    {"name": "Quiz de Márcio", "players": "2/5", "price": "3 SC"},
-    {"name": "Quiz de Marco", "players": "3/10", "price": "4 SC"},
-    {"name": "Quiz de Filipe", "players": "9/10", "price": "5 SC"},
-    {"name": "Quiz de Pedro", "players": "6/10", "price": "2 SC"},
-  ];
+  List<dynamic> availableQuizzes = []; 
+
+  bool isLoading = true; 
+
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<UserProvider>(context, listen: false).fetchUserCoins();
+      _fetchQuizzes(); 
     });
+  }
+
+  Future<void> _fetchQuizzes() async {
+    try {
+      final container = Provider.of<ServiceContainer>(context, listen: false);
+      
+      final response = await container.apiClient.get('/quizzes'); 
+      
+      if (mounted) {
+        setState(() {
+          // Converte o JSON recebido para a lista
+          availableQuizzes = jsonDecode(response.body);
+          isLoading = false; // Para o loading
+        });
+      }
+    } catch (e) {
+      print("Erro ao carregar quizzes: $e");
+      // Mesmo com erro, paramos o loading para não travar a tela
+      if (mounted) setState(() => isLoading = false);
+    }
   }
 
   @override
@@ -50,7 +65,7 @@ class _QuizScreenState extends State<QuizScreen> {
               'assets/Logo.png', 
               width: 160,
               fit: BoxFit.contain,
-              errorBuilder: (context, error, stackTrace) => Icon(Icons.sports_soccer, size: 80, color: Colors.blue), // Placeholder caso não tenha logo
+              errorBuilder: (context, error, stackTrace) => Icon(Icons.sports_soccer, size: 80, color: Colors.blue),
             ),
           ),
           
@@ -62,55 +77,51 @@ class _QuizScreenState extends State<QuizScreen> {
 
           SizedBox(height: 20),
 
-          // LISTA (ListView.builder dentro de Expanded para ocupar o espaço)
+         
           Expanded(
-            child: ListView.builder(
-              itemCount: availableQuizzes.length,
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              itemBuilder: (context, index) {
-                final item = availableQuizzes[index];
-                return _buildQuizItem(item);
-              },
-            ),
+            child: isLoading 
+              ? Center(child: CircularProgressIndicator(color: Color(0xFFCCDC39))) // Mostra rodinha se estiver carregando
+              : ListView.builder(
+                  itemCount: availableQuizzes.length,
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  itemBuilder: (context, index) {
+                    final item = availableQuizzes[index];
+                    return _buildQuizItem(item);
+                  },
+                ),
           ),
 
-          // Botão Voltar e Rodapé
           _buildFooter(),
         ],
       ),
     );
   }
 
-  // Widget que constrói cada linha da lista (Bola + Nome/Qtd + Preço)
-  Widget _buildQuizItem(Map<String, dynamic> item) {
-    // Cor da borda azul neon
+  Widget _buildQuizItem(dynamic item) {
     final borderColor = Colors.cyan; 
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 12.0),
       child: Row(
         children: [
-          // Ícone da Bola (Substitua por Image.asset se tiver o ícone exato)
           Icon(Icons.sports_soccer, color: Colors.blueGrey[200], size: 30),
           SizedBox(width: 10),
           
-          // Caixa com Nome e Lotação
           Expanded(
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
               decoration: BoxDecoration(
                 border: Border.all(color: borderColor, width: 2),
-                // color: Colors.black, // Fundo transparente/preto
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    item["name"],
+                    item["name"] ?? "Sem Nome", 
                     style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
                   Text(
-                    item["players"],
+                    item["players"] ?? "-", 
                     style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
                 ],
@@ -120,14 +131,13 @@ class _QuizScreenState extends State<QuizScreen> {
 
           SizedBox(width: 10),
 
-          // Caixa com o Preço (SC)
           Container(
             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
             decoration: BoxDecoration(
               border: Border.all(color: borderColor, width: 2),
             ),
             child: Text(
-              item["price"],
+              item["price"] ?? "0 SC", 
               style: TextStyle(color: Colors.white, fontSize: 16),
             ),
           ),
@@ -136,12 +146,10 @@ class _QuizScreenState extends State<QuizScreen> {
     );
   }
 
-  // Rodapé com botão verde e links
   Widget _buildFooter() {
     return Column(
       children: [
         SizedBox(height: 10),
-        // Botão Voltar
         Container(
           width: 200,
           height: 45,
@@ -164,7 +172,6 @@ class _QuizScreenState extends State<QuizScreen> {
         
         SizedBox(height: 20),
         
-        // Links de Privacidade e Coins
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
           child: Row(
@@ -188,7 +195,7 @@ class _QuizScreenState extends State<QuizScreen> {
                     );
                   }
                   return Text(
-                    "Soccer Coins: ${userProvider.coins}", // Valor dinâmico
+                    "Soccer Coins: ${userProvider.coins}",
                     style: TextStyle(color: Colors.white, fontSize: 16),
                   );
                 },
