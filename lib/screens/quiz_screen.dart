@@ -1,9 +1,12 @@
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:soccer_quiz_flutter/providers/coin_provider.dart';
 import 'package:soccer_quiz_flutter/screens/home_screen.dart';
 import 'package:soccer_quiz_flutter/screens/termos_screen.dart';
+import 'package:soccer_quiz_flutter/services/di.dart';
 
 class QuizScreen extends StatefulWidget {
   @override
