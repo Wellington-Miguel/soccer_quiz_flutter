@@ -115,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => RankingScreen())); 
+                              builder: (context) => RankingListScreen())); 
                     }),
                     
                     _buildMenuItem("Novo Time", onTap: () {}),

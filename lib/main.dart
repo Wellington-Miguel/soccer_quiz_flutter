@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:soccer_quiz_flutter/screens/home_screen.dart';
-import 'package:soccer_quiz_flutter/screens/list_user_screen.dart';
-import 'package:soccer_quiz_flutter/screens/login_screen.dart';
-import 'package:soccer_quiz_flutter/screens/profile_screen.dart';
-import 'package:soccer_quiz_flutter/screens/ranking_screen.dart';
 import 'providers/coin_provider.dart';
 import 'screens/splash_screen.dart';
 import 'services/di.dart';
