@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:soccer_quiz_flutter/screens/create_user_screen.dart';
 import '../providers/auth_provider.dart';
 import 'home_screen.dart';
 
@@ -72,7 +73,31 @@ class _LoginScreenState extends State<LoginScreen> {
                 )
               ]),
             ),
-          )
+          ),
+          SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("Não tem uma conta? ", style: TextStyle(color: Colors.grey)),
+              GestureDetector(
+                onTap: () {
+                   // Navegar para LoginScreen
+                  Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SignUpScreen())); // Exemplo: volta se veio do login
+                },
+                child: Text(
+                  "Cadastre-se aqui",
+                  style: TextStyle(
+                    color: Color(0xFFCCDC39),
+                    fontWeight: FontWeight.bold,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ]),
       ),
     );
