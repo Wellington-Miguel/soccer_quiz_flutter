@@ -46,8 +46,18 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 150,
                 fit: BoxFit.contain,
               ),
-              SizedBox(height: 40),
-
+              Center(
+                child: Text(
+                  "LOGIN",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.5,
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
               // FORMULÁRIO
               Form(
                 key: _formKey,
@@ -101,45 +111,42 @@ class _LoginScreenState extends State<LoginScreen> {
                     // BOTÃO DE LOGIN
                     auth.state == AuthState.loading
                         ? CircularProgressIndicator(color: Colors.lightGreen)
-                        : Container(
-                          margin: EdgeInsetsDirectional.symmetric(horizontal: 150, vertical: 0),
-                          child: SizedBox(
-                              width: double.infinity,
-                              height: 50,
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.lightGreen,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                                onPressed: () async {
-                                  if (_formKey.currentState?.validate() ?? false) {
-                                    await auth.login(
-                                        _email.text.trim(), _pass.text.trim());
-                                    if (auth.state == AuthState.authenticated) {
-                                      Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (_) => HomeScreen()));
-                                    } else if (auth.state == AuthState.error) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                          SnackBar(
-                                              content:
-                                                  Text(auth.error ?? 'Erro')));
-                                    }
-                                  }
-                                },
-                                child: Text(
-                                  'ENTRAR',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold),
+                        : SizedBox(
+                            width: double.infinity,
+                            height: 50,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.lightGreen,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
                               ),
+                              onPressed: () async {
+                                if (_formKey.currentState?.validate() ?? false) {
+                                  await auth.login(
+                                      _email.text.trim(), _pass.text.trim());
+                                  if (auth.state == AuthState.authenticated) {
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (_) => HomeScreen()));
+                                  } else if (auth.state == AuthState.error) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                            content:
+                                                Text(auth.error ?? 'Erro')));
+                                  }
+                                }
+                              },
+                              child: Text(
+                                'ENTRAR',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold),
+                              ),
                             ),
-                        ),
+                          ),
                   ],
                 ),
               ),

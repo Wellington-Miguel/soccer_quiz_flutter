@@ -132,15 +132,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       height: 50,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFFCCDC39), // Verde Neon
+                          backgroundColor:  Colors.lightGreen, // Verde Neon
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                           elevation: 5,
-                          shadowColor: Color(0xFFCCDC39).withOpacity(0.4),
+                          shadowColor: Colors.lightGreen.withOpacity(0.4),
                         ),
                         onPressed: _register,
                         child: Text(
                           "CADASTRAR",
-                          style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
+                          style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
@@ -160,7 +160,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           child: Text(
                             "Entre aqui",
                             style: TextStyle(
-                              color: Color(0xFFCCDC39),
+                              color: Colors.lightGreen,
                               fontWeight: FontWeight.bold,
                               decoration: TextDecoration.underline,
                             ),
@@ -182,12 +182,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
               children: [
                 GestureDetector(
                   onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => TermsScreen())),
-                  child: Text("Privacidade", style: TextStyle(color: Color(0xFFCCDC39), fontSize: 12))
+                  child: Text("Privacidade", style: TextStyle(color: Colors.lightGreen, fontSize: 12))
                 ),
                 SizedBox(width: 20),
                 GestureDetector(
                   onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => TermsScreen())),
-                  child: Text("Termos", style: TextStyle(color: Color(0xFFCCDC39), fontSize: 12))
+                  child: Text("Termos", style: TextStyle(color:  Colors.lightGreen, fontSize: 12))
                 ),
               ],
             ),
