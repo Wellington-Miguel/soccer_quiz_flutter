@@ -17,88 +17,167 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
+
+    // Definição do estilo da borda quando não está focado (padrão cinza)
+    final defaultBorder = OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.grey),
+    );
+
+    // Definição do estilo da borda quando ESTÁ focado (Verde)
+    final focusedBorder = OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.lightGreen, width: 2.0),
+    );
+
     return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(),
-      body: Padding(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-          Image.asset(
-            'assets/Logo.png',
-            width: 160,
-            fit: BoxFit.contain,
-          ),
-          Form(
-            key: _formKey,
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 60, vertical: 0),
-              padding: 
-                  EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Column(
-                children: [
-                  TextFormField(
-                  controller: _email,
-                  decoration: InputDecoration(labelText: 'E-mail'),
-                  validator: (v) => v != null && v.contains('@') ? null : 'E-mail inválido',
-                ),
-                TextFormField(
-                  controller: _pass,
-                  decoration: InputDecoration(labelText: 'Senha'),
-                  obscureText: true,
-                  validator: (v) => v != null && v.length >= 4 ? null : 'Senha muito curta',
-                ),
-                SizedBox(height: 20),
-                auth.state == AuthState.loading ? CircularProgressIndicator() :
-                ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: WidgetStateProperty.all(Colors.lightGreen),
-                  ),
-                  onPressed: () async {
-                    if (_formKey.currentState?.validate() ?? false) {
-                      await auth.login(_email.text.trim(), _pass.text.trim());
-                      if (auth.state == AuthState.authenticated) {
-                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HomeScreen()));
-                      } else if (auth.state == AuthState.error) {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(auth.error ?? 'Erro')));
-                      }
-                    }
-                  },
-                  child: Text('Login', style: TextStyle(color: Colors.black),),
-                )
-              ]),
-            ),
-          ),
-          SizedBox(height: 20),
-          Row(
+      appBar: AppBar(
+        title: Text("Login"),
+        centerTitle: true,
+      ),
+      body: Center(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(24),
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text("Não tem uma conta? ", style: TextStyle(color: Colors.grey)),
-              GestureDetector(
-                onTap: () {
-                   // Navegar para LoginScreen
-                  Navigator.push(
+              // LOGO
+              Image.asset(
+                'assets/Logo.png',
+                height: 150,
+                fit: BoxFit.contain,
+              ),
+              SizedBox(height: 40),
+
+              // FORMULÁRIO
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: _email,
+                      keyboardType: TextInputType.emailAddress,
+                      cursorColor: Colors.lightGreen, // Cursor verde
+                      decoration: InputDecoration(
+                        labelText: 'E-mail',
+                        // Cor do texto "E-mail" quando focado
+                        floatingLabelStyle: TextStyle(color: Colors.lightGreen), 
+                        prefixIcon: Icon(Icons.email),
+                        prefixIconColor: WidgetStateColor.resolveWith((states) =>
+                            states.contains(WidgetState.focused)
+                                ? Colors.lightGreen
+                                : Colors.grey), // Ícone fica verde ao focar
+                        
+                        border: defaultBorder, // Borda padrão
+                        enabledBorder: defaultBorder, // Borda quando habilitado mas sem foco
+                        focusedBorder: focusedBorder, // <--- AQUI A MÁGICA: Borda Verde ao focar
+                      ),
+                      validator: (v) => v != null && v.contains('@')
+                          ? null
+                          : 'E-mail inválido',
+                    ),
+                    SizedBox(height: 16),
+                    TextFormField(
+                      controller: _pass,
+                      cursorColor: Colors.lightGreen, // Cursor verde
+                      decoration: InputDecoration(
+                        labelText: 'Senha',
+                        floatingLabelStyle: TextStyle(color: Colors.lightGreen),
+                        prefixIcon: Icon(Icons.lock),
+                        prefixIconColor: WidgetStateColor.resolveWith((states) =>
+                            states.contains(WidgetState.focused)
+                                ? Colors.lightGreen
+                                : Colors.grey),
+                        
+                        border: defaultBorder,
+                        enabledBorder: defaultBorder,
+                        focusedBorder: focusedBorder, // <--- Borda Verde ao focar
+                      ),
+                      obscureText: true,
+                      validator: (v) =>
+                          v != null && v.length >= 4 ? null : 'Senha muito curta',
+                    ),
+                    SizedBox(height: 24),
+
+                    // BOTÃO DE LOGIN
+                    auth.state == AuthState.loading
+                        ? CircularProgressIndicator(color: Colors.lightGreen)
+                        : Container(
+                          margin: EdgeInsetsDirectional.symmetric(horizontal: 150, vertical: 0),
+                          child: SizedBox(
+                              width: double.infinity,
+                              height: 50,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.lightGreen,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                onPressed: () async {
+                                  if (_formKey.currentState?.validate() ?? false) {
+                                    await auth.login(
+                                        _email.text.trim(), _pass.text.trim());
+                                    if (auth.state == AuthState.authenticated) {
+                                      Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (_) => HomeScreen()));
+                                    } else if (auth.state == AuthState.error) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(
+                                              content:
+                                                  Text(auth.error ?? 'Erro')));
+                                    }
+                                  }
+                                },
+                                child: Text(
+                                  'ENTRAR',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                        ),
+                  ],
+                ),
+              ),
+
+              SizedBox(height: 20),
+
+              // LINK DE CADASTRO
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Não tem uma conta? ",
+                    style: TextStyle(
+                      // Se o fundo for branco, o texto deve ser preto/cinza
+                      color: Colors.white, 
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => SignUpScreen())); // Exemplo: volta se veio do login
-                },
-                child: Text(
-                  "Cadastre-se aqui",
-                  style: TextStyle(
-                    color: Color(0xFFCCDC39),
-                    fontWeight: FontWeight.bold,
-                    decoration: TextDecoration.underline,
+                              builder: (context) => SignUpScreen()));
+                    },
+                    child: Text(
+                      "Cadastre-se",
+                      style: TextStyle(
+                        color: Colors.lightGreen, // Cor do tema
+                        fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
             ],
           ),
-        ]),
+        ),
       ),
     );
   }
